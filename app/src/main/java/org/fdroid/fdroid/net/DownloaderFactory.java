@@ -40,9 +40,9 @@ public class DownloaderFactory {
             final String[] projection = {Schema.RepoTable.Cols.USERNAME, Schema.RepoTable.Cols.PASSWORD};
             Repo repo = RepoProvider.Helper.findByUrl(context, uri, projection);
             if (repo == null) {
-                downloader = new HttpDownloader(uri, destFile);
+                downloader = new HttpDownloader(uri, destFile, context);
             } else {
-                downloader = new HttpDownloader(uri, destFile, repo.username, repo.password);
+                downloader = new HttpDownloader(uri, destFile, repo.username, repo.password, context);
             }
         }
         return downloader;

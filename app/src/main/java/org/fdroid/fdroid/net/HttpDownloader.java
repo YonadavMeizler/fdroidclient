@@ -22,6 +22,7 @@
 package org.fdroid.fdroid.net;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
@@ -31,7 +32,6 @@ import org.apache.commons.io.FileUtils;
 import org.fdroid.fdroid.BuildConfig;
 import org.fdroid.fdroid.FDroidApp;
 import org.fdroid.fdroid.Utils;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +41,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Download files over HTTP, with support for proxies, {@code .onion} addresses,
@@ -58,6 +61,7 @@ public class HttpDownloader extends Downloader {
     private final String password;
     private URL sourceUrl;
     private HttpURLConnection connection;
+    private Context context;
     private boolean newFileAvailableOnServer;
 
     private long fileFullSize = -1L;
@@ -66,9 +70,9 @@ public class HttpDownloader extends Downloader {
      */
     public static String queryString;
 
-    HttpDownloader(Uri uri, File destFile)
+    HttpDownloader(Uri uri, File destFile, Context context)
             throws FileNotFoundException, MalformedURLException {
-        this(uri, destFile, null, null);
+        this(uri, destFile, null, null, context);
     }
 
     /**
@@ -81,12 +85,13 @@ public class HttpDownloader extends Downloader {
      * @param password Password for HTTP Basic Auth, use {@code null} to ignore
      * @throws MalformedURLException
      */
-    HttpDownloader(Uri uri, File destFile, String username, String password)
+    HttpDownloader(Uri uri, File destFile, String username, String password, Context context)
             throws FileNotFoundException, MalformedURLException {
         super(uri, destFile);
         this.sourceUrl = new URL(urlString);
         this.username = username;
         this.password = password;
+        this.context = context;
     }
 
     @Override
@@ -212,6 +217,13 @@ public class HttpDownloader extends Downloader {
         connection.setRequestProperty("User-Agent", "F-Droid " + BuildConfig.VERSION_NAME);
         connection.setConnectTimeout(getTimeout());
         connection.setReadTimeout(getTimeout());
+        if(connection instanceof HttpsURLConnection){
+            SelfSignSslFactory selfSignSslFactory = new SelfSignSslFactory(context);
+            SSLSocketFactory factory = selfSignSslFactory.getSocketFactory();
+            if(factory != null){
+                ((HttpsURLConnection)connection).setSSLSocketFactory(factory);
+            }
+        }
 
         if (Build.VERSION.SDK_INT < 19) { // gzip encoding can be troublesome on old Androids
             connection.setRequestProperty("Accept-Encoding", "identity");
