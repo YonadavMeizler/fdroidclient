@@ -199,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
         Intent intent = getIntent();
         handleSearchOrAppViewIntent(intent);
+
+
     }
 
     @Override
