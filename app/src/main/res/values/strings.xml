@@ -677,4 +677,9 @@ This often occurs with apps installed via Google Play or other sources, if they 
         <item quantity="one">Updated %1$d year ago</item>
         <item quantity="other">Updated %1$d years ago</item>
     </plurals>
+    <!--OTP Dialog strings-->
+    <string name="otp_dialog_title">Request OTP</string>
+    <string name="otp_dialog_description">Please insert here the OTP code</string>
+    <string name="otp_dialog_invalid_connection">Sorry, OTP service not available now. For more information connect with you system administrator</string>
+
 </resources>

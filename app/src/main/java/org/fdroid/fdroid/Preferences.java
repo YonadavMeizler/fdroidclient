@@ -119,6 +119,7 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
     public static final String PREF_SEND_VERSION_AND_UUID_TO_SERVERS = "sendVersionAndUUIDToServers";
     public static final String PREF_ALLOW_PUSH_REQUESTS = "allowPushRequests";
     public static final String PREF_ACCESS_TOKEN = "access_token";
+    public static final String PREF_DEVICE_ID = "device_id";
 
     public static final int OVER_NETWORK_NEVER = 0;
     public static final int OVER_NETWORK_ON_DEMAND = 1;
@@ -206,7 +207,8 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
      * of the Privileged Extension.  The preference provides a way to disable using the
      * Privileged Extension even though its installed.
      *
-     * @see org.fdroid.fdroid.views.PreferencesFragment#initPrivilegedInstallerPreference()
+     * @see org.fdroid.fdroid.views.PreferencesFragment
+     * #initPrivilegedInstallerPreference()
      */
     public boolean isPrivilegedInstallerEnabled() {
         return preferences.getBoolean(PREF_PRIVILEGED_INSTALLER, true);
@@ -400,7 +402,20 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
         return (Build.BRAND + " " + Build.MODEL + new Random().nextInt(9999))
                 .replaceAll(" ", "-");
     }
+    /**
+     * Device ID parameter for OTP request.
+     */
+    public String getDeviceID(){
+        return preferences.getString(Preferences.PREF_DEVICE_ID, "");
+    }
 
+    public void setDeviceID(String deviceID){
+        preferences.edit().putString(Preferences.PREF_DEVICE_ID, deviceID).apply();
+    }
+
+    /**
+     * Access Token Preference for HTTP authentication
+     */
     public String getAccessToken(){
         return preferences.getString(Preferences.PREF_ACCESS_TOKEN, "");
     }

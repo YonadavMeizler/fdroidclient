@@ -22,20 +22,31 @@
 
 package org.fdroid.fdroid.views.main;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -55,7 +66,10 @@ import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.R;
 import org.fdroid.fdroid.UpdateService;
 import org.fdroid.fdroid.Utils;
+import org.fdroid.fdroid.authorisation.Authorisation;
+import org.fdroid.fdroid.authorisation.AuthorisationDialog;
 import org.fdroid.fdroid.data.NewRepoConfig;
+import org.fdroid.fdroid.data.PackageProvider;
 import org.fdroid.fdroid.nearby.SDCardScannerService;
 import org.fdroid.fdroid.nearby.SwapService;
 import org.fdroid.fdroid.nearby.SwapWorkflowActivity;
@@ -66,6 +80,7 @@ import org.fdroid.fdroid.views.ManageReposActivity;
 import org.fdroid.fdroid.views.apps.AppListActivity;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
 
 /**
  * Main view shown to users upon starting F-Droid.
@@ -92,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     static final int REQUEST_LOCATION_PERMISSIONS = 0xEF0F;
     static final int REQUEST_STORAGE_PERMISSIONS = 0xB004;
     public static final int REQUEST_STORAGE_ACCESS = 0x40E5;
+    static final int REQUEST_PHONE_STATE_PERMISSIONS = 0x40E4;
 
     private static final String ADD_REPO_INTENT_HANDLED = "addRepoIntentHandled";
 
@@ -200,7 +216,37 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         Intent intent = getIntent();
         handleSearchOrAppViewIntent(intent);
 
+        if(Preferences.get().getDeviceID().equals("")){
+            initialDeviceId(this);
+        }
 
+    }
+
+
+    @SuppressLint("HardwareIds")
+    private void initialDeviceId(Context context){
+        String[] permissions = {Manifest.permission.READ_PHONE_STATE};
+        String imei = "";
+        String uid = Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (Build.VERSION.SDK_INT >= 30) {
+                imei = uid;
+            }
+            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                imei =  tm.getImei();
+            }
+            else {
+                imei = tm.getDeviceId();
+            }
+        }
+        else{
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                requestPermissions(permissions, REQUEST_PHONE_STATE_PERMISSIONS);
+        }
+        if (!imei.equals("")){
+            Preferences.get().setDeviceID(imei);
+        }
     }
 
     @Override
@@ -284,6 +330,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                     this.getString(R.string.scan_removable_storage_toast, ""),
                     Toast.LENGTH_SHORT).show();
             SDCardScannerService.scan(this);
+        }
+        else if(requestCode == REQUEST_PHONE_STATE_PERMISSIONS){
+            initialDeviceId(this);
         }
     }
 
