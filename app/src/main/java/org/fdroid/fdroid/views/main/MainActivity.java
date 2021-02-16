@@ -24,21 +24,17 @@ package org.fdroid.fdroid.views.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,9 +63,7 @@ import org.fdroid.fdroid.R;
 import org.fdroid.fdroid.UpdateService;
 import org.fdroid.fdroid.Utils;
 import org.fdroid.fdroid.authorisation.Authorisation;
-import org.fdroid.fdroid.authorisation.AuthorisationDialog;
 import org.fdroid.fdroid.data.NewRepoConfig;
-import org.fdroid.fdroid.data.PackageProvider;
 import org.fdroid.fdroid.nearby.SDCardScannerService;
 import org.fdroid.fdroid.nearby.SwapService;
 import org.fdroid.fdroid.nearby.SwapWorkflowActivity;
@@ -80,7 +74,6 @@ import org.fdroid.fdroid.views.ManageReposActivity;
 import org.fdroid.fdroid.views.apps.AppListActivity;
 
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
 
 /**
  * Main view shown to users upon starting F-Droid.
@@ -122,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private int selectedMenuId;
     private TextBadgeItem updatesBadge;
 
+    private boolean hasAuthorised;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         ((FDroidApp) getApplication()).applyTheme(this);
@@ -130,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         setContentView(R.layout.activity_main);
 
         adapter = new MainViewAdapter(this);
-
+        hasAuthorised = false;
         pager = (RecyclerView) findViewById(R.id.main_view_pager);
         pager.setHasFixedSize(true);
         pager.setLayoutManager(new NonScrollingHorizontalLayoutManager(this));
@@ -218,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
         if(Preferences.get().getDeviceID().equals("")){
             initialDeviceId(this);
+        }
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            if(!hasAuthorised) {
+                Authorisation.check(this);
+            }
         }
 
     }
@@ -333,6 +334,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         }
         else if(requestCode == REQUEST_PHONE_STATE_PERMISSIONS){
             initialDeviceId(this);
+            Authorisation.check(this);
+            hasAuthorised = true;
         }
     }
 

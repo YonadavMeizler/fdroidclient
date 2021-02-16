@@ -51,10 +51,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'src/androidTest/proguard-rules.pro'
         }
+        release{
+            buildConfigField "String", "CA", '"ca_rel.crt"'
+            buildConfigField "String", "HOST_NAME", '"heimdallr.hfc.fe"'
+        }
+        staging {
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            buildConfigField "String", "CA", '"ca_staging.crt"'
+            buildConfigField "String", "HOST_NAME", '"heimdallr.hfc.fe"'
+        }
         debug {
             applicationIdSuffix ".debug"
             resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
             versionNameSuffix "-debug"
+            buildConfigField "String", "CA", '"ca_debug.crt"'
+            buildConfigField "String", "HOST_NAME", '"heimdallr.me"'
             println 'buildTypes.debug defaultConfig.versionCode ' + defaultConfig.versionCode
         }
     }

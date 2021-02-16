@@ -1,7 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/otp_dialog_deviceId_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/otp_dialog_wait"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/otp_dialog_wait"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/otp_confirm_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/otp_dialog_description"/>
+
+        <EditText
+            android:id="@+id/otp_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="6"/>
+        <TextView
+            android:id="@+id/otp_timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+        <Button
+            android:id="@+id/otp_confirm_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/otp_dialog_confirm"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/otp_dialog_problem_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/otp_dialog_alert_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/otp_dialog_service_not_allowed"/>
+
+        <Button
+            android:id="@+id/otp_dialog_try_again_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/try_again"/>
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/otp_dialog_close_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/otp_dialog_close_text" />
+
+
 
 </LinearLayout>

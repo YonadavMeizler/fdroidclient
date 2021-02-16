@@ -37,7 +37,6 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
@@ -90,7 +89,7 @@ public class UpdateService extends JobIntentService {
     private NotificationCompat.Builder notificationBuilder;
     private AppUpdateStatusManager appUpdateStatusManager;
 
-    public static void updateNow(Context context) {
+    public static void  updateNow(Context context) {
         updateRepoNow(context, null);
     }
 

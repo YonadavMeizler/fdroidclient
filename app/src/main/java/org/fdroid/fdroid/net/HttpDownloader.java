@@ -31,7 +31,10 @@ import info.guardianproject.netcipher.NetCipher;
 import org.apache.commons.io.FileUtils;
 import org.fdroid.fdroid.BuildConfig;
 import org.fdroid.fdroid.FDroidApp;
+import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.Utils;
+import org.fdroid.fdroid.authorisation.Authorisation;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -163,8 +166,11 @@ public class HttpDownloader extends Downloader {
                 }
                 newFileAvailableOnServer = true;
                 break;
-            case HttpURLConnection.HTTP_NOT_FOUND:
+            case HttpURLConnection.HTTP_UNAUTHORIZED:
                 notFound = true;
+                Authorisation.requestOtp(context);
+                return;
+            case HttpURLConnection.HTTP_NOT_FOUND:
                 return;
             default:
                 Utils.debugLog(TAG, "HEAD check of " + urlString + " returned " + statusCode + ": "
@@ -202,6 +208,7 @@ public class HttpDownloader extends Downloader {
 
     private HttpURLConnection getConnection() throws SocketTimeoutException, IOException {
         HttpURLConnection connection;
+        String token = Preferences.get().getAccessToken();
         if (isSwapUrl(sourceUrl)) {
             // swap never works with a proxy, its unrouted IP on the same subnet
             connection = (HttpURLConnection) sourceUrl.openConnection();
@@ -215,6 +222,12 @@ public class HttpDownloader extends Downloader {
         }
 
         connection.setRequestProperty("User-Agent", "F-Droid " + BuildConfig.VERSION_NAME);
+        if(!token.equals("")) {
+            connection.setRequestProperty("Authorization", "Bearer " + token);
+        }
+        else{
+            Authorisation.requestOtp(context);
+        }
         connection.setConnectTimeout(getTimeout());
         connection.setReadTimeout(getTimeout());
         if(connection instanceof HttpsURLConnection){

@@ -79,6 +79,11 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
                     PrivilegedInstaller.isExtensionInstalledCorrectly(context)
                             != PrivilegedInstaller.IS_EXTENSION_INSTALLED_YES);
         }
+
+
+        editor.putString(PREF_HOST_NAME, BuildConfig.HOST_NAME);
+
+
         editor.apply();
     }
 
@@ -120,6 +125,7 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
     public static final String PREF_ALLOW_PUSH_REQUESTS = "allowPushRequests";
     public static final String PREF_ACCESS_TOKEN = "access_token";
     public static final String PREF_DEVICE_ID = "device_id";
+    public static final String PREF_HOST_NAME = "host_name";
 
     public static final int OVER_NETWORK_NEVER = 0;
     public static final int OVER_NETWORK_ON_DEMAND = 1;
@@ -220,6 +226,13 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
 
     public void setPostPrivilegedInstall(boolean postInstall) {
         preferences.edit().putBoolean(PREF_POST_PRIVILEGED_INSTALL, postInstall).apply();
+    }
+
+    /**
+     * Get repo proxy server hostname
+     */
+    public String getHostName(){
+        return preferences.getString(Preferences.PREF_HOST_NAME, BuildConfig.HOST_NAME);
     }
 
     /**

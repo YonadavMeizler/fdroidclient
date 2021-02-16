@@ -3,6 +3,8 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import org.fdroid.fdroid.BuildConfig;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +21,12 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class SelfSignSslFactory {
 
-    private final String fileName = "ca.crt";
+
     private SSLContext sslContext = null;
 
     public SelfSignSslFactory(@NonNull Context context){
         try {
+            final String fileName = BuildConfig.CA;
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             InputStream is = context.getResources().getAssets().open(fileName);
             InputStream caInput = new BufferedInputStream(is);

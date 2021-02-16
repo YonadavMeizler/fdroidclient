@@ -677,9 +677,27 @@ This often occurs with apps installed via Google Play or other sources, if they 
         <item quantity="one">Updated %1$d year ago</item>
         <item quantity="other">Updated %1$d years ago</item>
     </plurals>
-    <!--OTP Dialog strings-->
+
+    <!--OTP Dialog constantss-->
+    <string name="otp_dialog_wait">Please wait for service response</string>
     <string name="otp_dialog_title">Request OTP</string>
-    <string name="otp_dialog_description">Please insert here the OTP code</string>
-    <string name="otp_dialog_invalid_connection">Sorry, OTP service not available now. For more information connect with you system administrator</string>
+    <string name="otp_dialog_description">Please paste here the OTP code</string>
+    <string name="otp_dialog_confirm">Confirm</string>
+    <string name="otp_dialog_service_not_allowed">
+        Not possible to use application without authorisation.
+        For more information please connect to you system administrator.
+    </string>
+    <string name="otp_dialog_close_text">Close</string>
+    <string name="otp_device_id_text">Current device ID: %1$s</string>
+    <!-- OTP Error messages -->
+    <string name="otp_dialog_service_not_found">Sorry, OTP service not found. Please try again latte.</string>
+    <string name="otp_dialog_service_forbidden">Sorry, Your device connection is not allowed.</string>
+    <string name="otp_dialog_service_error">Sorry, OTP service is not available now. Response Code: %1$s</string>
+    <!--Authentication dialog constants-->
+    <string name="jwt_dialog_title">OTP validation</string>
+    <string name="jwt_otp_not_valid">OTP not valid</string>
+    <!--Init Repo dialog -->
+    <string name="repo_init_title">Load repository</string>
+    <string name="repo_server_error_resp">Sorry, Not correct server response. Error code: %1$s</string>
 
 </resources>
