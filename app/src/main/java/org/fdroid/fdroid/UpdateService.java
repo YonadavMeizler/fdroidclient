@@ -41,7 +41,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import org.fdroid.fdroid.data.Apk;
 import org.fdroid.fdroid.data.ApkProvider;
 import org.fdroid.fdroid.data.App;
@@ -54,7 +53,6 @@ import org.fdroid.fdroid.data.Schema;
 import org.fdroid.fdroid.installer.InstallManagerService;
 import org.fdroid.fdroid.net.BluetoothDownloader;
 import org.fdroid.fdroid.net.ConnectivityMonitorService;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;

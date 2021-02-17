@@ -50,6 +50,7 @@ android {
             buildConfigField "String", "ACRA_REPORT_EMAIL", '"reports@f-droid.org"' // String needs both quotes
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'src/androidTest/proguard-rules.pro'
+
         }
         release{
             buildConfigField "String", "CA", '"ca_rel.crt"'
@@ -60,14 +61,15 @@ android {
             versionNameSuffix "-staging"
             buildConfigField "String", "CA", '"ca_staging.crt"'
             buildConfigField "String", "HOST_NAME", '"heimdallr.hfc.fe"'
+            resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
         }
         debug {
             applicationIdSuffix ".debug"
-            resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
             versionNameSuffix "-debug"
             buildConfigField "String", "CA", '"ca_debug.crt"'
             buildConfigField "String", "HOST_NAME", '"heimdallr.me"'
             println 'buildTypes.debug defaultConfig.versionCode ' + defaultConfig.versionCode
+            resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
         }
     }
 
@@ -156,9 +158,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.palette:palette:1.0.0'
-
     implementation 'com.google.android.material:material:1.1.0'
-
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'info.guardianproject.netcipher:netcipher:2.0.0-beta1'
@@ -169,24 +169,20 @@ dependencies {
     implementation 'io.reactivex:rxjava:1.1.0'
     implementation 'com.hannesdorfmann:adapterdelegates3:3.0.1'
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.0.5'
-
     implementation 'com.fasterxml.jackson.core:jackson-core:2.11.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
-
     implementation 'org.bouncycastle:bcprov-jdk15on:1.65'
     fullImplementation 'org.bouncycastle:bcpkix-jdk15on:1.65'
     fullImplementation 'cc.mvdan.accesspoint:library:0.2.0'
     fullImplementation 'org.jmdns:jmdns:3.5.5'
     fullImplementation 'org.nanohttpd:nanohttpd:2.3.1'
-
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.robolectric:robolectric:4.3'
     testImplementation 'org.mockito:mockito-core:3.3.3'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.bouncycastle:bcprov-jdk15on:1.65'
-
     androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
