@@ -50,12 +50,13 @@ android {
             buildConfigField "String", "ACRA_REPORT_EMAIL", '"reports@f-droid.org"' // String needs both quotes
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'src/androidTest/proguard-rules.pro'
-
         }
+
         release{
             buildConfigField "String", "CA", '"ca_rel.crt"'
             buildConfigField "String", "HOST_NAME", '"heimdallr.hfc.fe"'
         }
+
         staging {
             applicationIdSuffix ".staging"
             versionNameSuffix "-staging"
@@ -63,6 +64,7 @@ android {
             buildConfigField "String", "HOST_NAME", '"heimdallr.hfc.fe"'
             resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
         }
+
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"

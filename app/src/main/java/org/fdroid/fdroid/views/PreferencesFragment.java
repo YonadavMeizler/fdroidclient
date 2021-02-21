@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -96,6 +97,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 
     private static final int REQUEST_INSTALL_ORBOT = 0x1234;
 
+    private PreferenceGroup updatePrefGroup;
     private PreferenceGroup otherPrefGroup;
     private LiveSeekBarPreference overWifiSeekBar;
     private LiveSeekBarPreference overDataSeekBar;
@@ -119,6 +121,9 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 
         addPreferencesFromResource(R.xml.preferences);
         otherPrefGroup = (PreferenceGroup) findPreference("pref_category_other");
+
+        updatePrefGroup = (PreferenceGroup) findPreference("update_pref_group");
+        updatePrefGroup.setVisible(false);
 
         keepInstallHistoryPref = (CheckBoxPreference) findPreference(Preferences.PREF_KEEP_INSTALL_HISTORY);
         installHistoryPref = findPreference("installHistory");

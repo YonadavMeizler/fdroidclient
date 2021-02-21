@@ -6,10 +6,10 @@
         on your device.
     </string>
 
-    <string name="site_link">https://f-droid.org</string>
-    <string name="forum_link">https://forum.f-droid.org</string>
-    <string name="source_link">https://gitlab.com/fdroid/fdroidclient</string>
-    <string name="license_gplv3_later">GNU General Public License version\u00A03 or later</string>
+    <string name="site_link" translatable="false">https://f-droid.org</string>
+    <string name="forum_link" translatable="false">https://forum.f-droid.org</string>
+    <string name="source_link" translatable="false">https://gitlab.com/fdroid/fdroidclient</string>
+    <string name="license_gplv3_later" translatable="false">GNU General Public License version\u00A03 or later</string>
 
     <string name="transition_app_item_icon">transition_app_item_icon</string>
 
@@ -40,8 +40,8 @@
         <item>night</item>
     </string-array>
 
-    <integer name="defaultOverData">1</integer> <!-- Preferences.OVER_NETWORK_ON_DEMAND -->
-    <integer name="defaultOverWifi">2</integer> <!-- Preferences.OVER_NETWORK_ALWAYS -->
+    <integer name="defaultOverData">2</integer> <!-- Preferences.OVER_NETWORK_ON_DEMAND -->
+    <integer name="defaultOverWifi">0</integer> <!-- Preferences.OVER_NETWORK_ALWAYS -->
 
-    <integer name="defaultUpdateInterval">3</integer>
+    <integer name="defaultUpdateInterval">5</integer>
 </resources>
