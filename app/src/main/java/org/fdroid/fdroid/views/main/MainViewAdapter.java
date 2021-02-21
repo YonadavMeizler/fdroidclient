@@ -84,14 +84,8 @@ class MainViewAdapter extends RecyclerView.Adapter<MainViewController> {
     public MainViewController onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         MainViewController holder = createEmptyView(activity);
         switch (viewType) {
-            case R.id.whats_new:
-                holder.bindWhatsNewView();
-                break;
             case R.id.categories:
                 holder.bindCategoriesView();
-                break;
-            case R.id.nearby:
-                holder.bindSwapView();
                 break;
             case R.id.updates:
                 // Hold of until onViewAttachedToWindow, because that is where we want to start listening
