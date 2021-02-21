@@ -109,7 +109,8 @@
                 android:summary="@string/scan_removable_storage_summary"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/proxy">
+    <PreferenceCategory android:title="@string/proxy"
+        android:key="pref_category_proxy">
         <SwitchPreference
                 android:key="useTor"
                 android:summary="@string/useTorSummary"

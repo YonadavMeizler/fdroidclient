@@ -121,15 +121,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat
         addPreferencesFromResource(R.xml.preferences);
         otherPrefGroup = (PreferenceGroup) findPreference("pref_category_other");
 
-        PreferenceGroup updatePrefGroup = (PreferenceGroup) findPreference("update_pref_group");
-        updatePrefGroup.setVisible(false);
+        final String[] categories = {"pref_category_other", "update_pref_group", "pref_category_appcompatibility",
+                               "pref_category_local_repo", "pref_category_proxy", "pref_category_privacy"};
 
-        PreferenceGroup appCapabilityPrefGroup = (PreferenceGroup) findPreference("pref_category_appcompatibility");
-        appCapabilityPrefGroup.setVisible(false);
-
-        PreferenceGroup localRepoPrefGroup = (PreferenceGroup) findPreference("pref_category_local_repo");
-        localRepoPrefGroup.setVisible(false);
-
+        for(String category : categories){
+            ((PreferenceGroup) findPreference(category)).setVisible(false);
+        }
 
         keepInstallHistoryPref = (CheckBoxPreference) findPreference(Preferences.PREF_KEEP_INSTALL_HISTORY);
         installHistoryPref = findPreference("installHistory");
