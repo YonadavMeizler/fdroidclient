@@ -109,9 +109,6 @@ public class ManageReposActivity extends AppCompatActivity
 
         setContentView(R.layout.repo_list_activity);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ListView repoList = (ListView) findViewById(R.id.list);
         repoAdapter = new RepoAdapter(this);
