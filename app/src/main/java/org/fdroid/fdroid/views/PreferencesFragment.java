@@ -97,7 +97,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat
 
     private static final int REQUEST_INSTALL_ORBOT = 0x1234;
 
-    private PreferenceGroup updatePrefGroup;
     private PreferenceGroup otherPrefGroup;
     private LiveSeekBarPreference overWifiSeekBar;
     private LiveSeekBarPreference overDataSeekBar;
@@ -122,8 +121,15 @@ public class PreferencesFragment extends PreferenceFragmentCompat
         addPreferencesFromResource(R.xml.preferences);
         otherPrefGroup = (PreferenceGroup) findPreference("pref_category_other");
 
-        updatePrefGroup = (PreferenceGroup) findPreference("update_pref_group");
+        PreferenceGroup updatePrefGroup = (PreferenceGroup) findPreference("update_pref_group");
         updatePrefGroup.setVisible(false);
+
+        PreferenceGroup appCapabilityPrefGroup = (PreferenceGroup) findPreference("pref_category_appcompatibility");
+        appCapabilityPrefGroup.setVisible(false);
+
+        PreferenceGroup localRepoPrefGroup = (PreferenceGroup) findPreference("pref_category_local_repo");
+        appCapabilityPrefGroup.setVisible(false);
+
 
         keepInstallHistoryPref = (CheckBoxPreference) findPreference(Preferences.PREF_KEEP_INSTALL_HISTORY);
         installHistoryPref = findPreference("installHistory");

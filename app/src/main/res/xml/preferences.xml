@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen android:title="@string/about_title">
         <intent
@@ -81,7 +82,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/appcompatibility"
-                                                      android:key="pref_category_appcompatibility">
+        android:key="pref_category_appcompatibility">
         <SwitchPreference
                 android:title="@string/show_incompat_versions"
                 android:defaultValue="false"
@@ -96,13 +97,14 @@
                 android:key="ignoreTouchscreen"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/local_repo">
+    <PreferenceCategory android:title="@string/local_repo"
+        app:key="pref_category_local_repo">
         <EditTextPreference
                 android:key="localRepoName"
                 android:title="@string/local_repo_name"/>
         <SwitchPreference
                 android:key="scanRemovableStorage"
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:title="@string/scan_removable_storage_title"
                 android:summary="@string/scan_removable_storage_summary"/>
     </PreferenceCategory>
