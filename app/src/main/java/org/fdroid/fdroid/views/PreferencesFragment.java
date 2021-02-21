@@ -128,7 +128,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat
         appCapabilityPrefGroup.setVisible(false);
 
         PreferenceGroup localRepoPrefGroup = (PreferenceGroup) findPreference("pref_category_local_repo");
-        appCapabilityPrefGroup.setVisible(false);
+        localRepoPrefGroup.setVisible(false);
 
 
         keepInstallHistoryPref = (CheckBoxPreference) findPreference(Preferences.PREF_KEEP_INSTALL_HISTORY);
