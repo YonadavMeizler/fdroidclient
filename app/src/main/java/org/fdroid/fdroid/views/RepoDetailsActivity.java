@@ -126,6 +126,8 @@ public class RepoDetailsActivity extends AppCompatActivity {
         RecyclerView userMirrorListView = findViewById(R.id.user_mirror_list);
         userMirrorListView.setLayoutManager(new LinearLayoutManager(this));
         userMirrorListView.setAdapter(new MirrorAdapter(repo, repo.userMirrors));
+        //For not used for client mirrors.
+        userMirrorListView.setVisibility(View.GONE);
 
         if (repo.address.startsWith("content://")) {
             // no need to show a QR Code, it is not shareable

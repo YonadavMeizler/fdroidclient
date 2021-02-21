@@ -298,7 +298,8 @@ public class IndexV1Updater extends IndexUpdater {
         // ensure the canonical URL is included in the "mirrors" list as the first entry
         LinkedHashSet<String> mirrors = new LinkedHashSet<>();
         mirrors.add(repo.address);
-        mirrors.addAll(getStringListRepoValue(repoMap, "mirrors"));
+        //Not use secondaries mirrors
+        //mirrors.addAll(getStringListRepoValue(repoMap, "mirrors"));
         repo.mirrors = mirrors.toArray(new String[mirrors.size()]);
 
         // below are optional, can be default value

@@ -6,6 +6,7 @@
         android:id="@+id/action_add_repo"
         android:icon="@drawable/ic_add"
         android:title="@string/menu_add_repo"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="ifRoom|withText"
+        android:visible="false"/>
 
 </menu>
