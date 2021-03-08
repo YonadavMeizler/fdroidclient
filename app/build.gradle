@@ -38,6 +38,11 @@ android {
           passing the following argument to the test runner: disableAnalytics "true".
          */
         testInstrumentationRunnerArguments disableAnalytics: 'true'
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "${applicationId}_${versionName}.apk"
+            }
+        }
     }
 
     buildTypes {
@@ -54,14 +59,18 @@ android {
 
         release{
             buildConfigField "String", "CA", '"ca_rel.crt"'
-            buildConfigField "String", "HOST_NAME", '"heimdallr.hfc.fe"'
+            buildConfigField "String[]", "HOST_NAME", '{' +
+                    '"heimdallr-1.clo.msi",' +
+                    '"heimdallr-2.clo.msi",' +
+                    '"heimdallr-3.clo.msi"' +
+                    '}'
         }
 
         staging {
             applicationIdSuffix ".staging"
             versionNameSuffix "-staging"
             buildConfigField "String", "CA", '"ca_staging.crt"'
-            buildConfigField "String", "HOST_NAME", '"heimdallr.hfc.fe"'
+            buildConfigField "String[]", "HOST_NAME", '{"heimdallr.hfc.fe"}'
             resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
         }
 
@@ -69,7 +78,11 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             buildConfigField "String", "CA", '"ca_debug.crt"'
-            buildConfigField "String", "HOST_NAME", '"heimdallr.me"'
+            buildConfigField "String[]", "HOST_NAME", '{' +
+                    '"heimdallr-1.me",' +
+                    '"heimdallr-2.me",' +
+                    '"heimdallr-3.me"' +
+                    '}'
             println 'buildTypes.debug defaultConfig.versionCode ' + defaultConfig.versionCode
             resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
         }

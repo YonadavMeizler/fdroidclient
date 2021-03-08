@@ -130,6 +130,10 @@ public class IndexV1Updater extends IndexUpdater {
             if (downloader.isNotFound()) {
                 return false;
             }
+            if (downloader.isTokenExpired()){
+                UpdateService.sendStatus(context, UpdateService.STATUS_ERROR_AUTHENTICATION);
+                return false;
+            }
             hasChanged = downloader.hasChanged();
 
             if (!hasChanged) {
@@ -157,6 +161,9 @@ public class IndexV1Updater extends IndexUpdater {
                     downloader.setTimeout(FDroidApp.getTimeout());
                     downloader.download();
                     if (downloader.isNotFound()) {
+                        return false;
+                    }
+                    if(downloader.isTokenExpired()){
                         return false;
                     }
                     hasChanged = downloader.hasChanged();
@@ -296,11 +303,11 @@ public class IndexV1Updater extends IndexUpdater {
         repo.description = getStringRepoValue(repoMap, "description");
 
         // ensure the canonical URL is included in the "mirrors" list as the first entry
-        LinkedHashSet<String> mirrors = new LinkedHashSet<>();
-        mirrors.add(repo.address);
-        //Not use secondaries mirrors
-        //mirrors.addAll(getStringListRepoValue(repoMap, "mirrors"));
-        repo.mirrors = mirrors.toArray(new String[mirrors.size()]);
+//        LinkedHashSet<String> mirrors = new LinkedHashSet<>();
+//        mirrors.add(repo.address);
+//        mirrors.addAll(getStringListRepoValue(repoMap, "mirrors"));
+//        repo.mirrors = mirrors.toArray(new String[mirrors.size()]);
+        repo.mirrors = Preferences.getMirrorsArray(repo.address);
 
         // below are optional, can be default value
         repo.maxage = getIntRepoValue(repoMap, "maxage");

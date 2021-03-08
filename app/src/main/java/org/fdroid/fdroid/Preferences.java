@@ -79,11 +79,6 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
                     PrivilegedInstaller.isExtensionInstalledCorrectly(context)
                             != PrivilegedInstaller.IS_EXTENSION_INSTALLED_YES);
         }
-
-
-        editor.putString(PREF_HOST_NAME, BuildConfig.HOST_NAME);
-
-
         editor.apply();
     }
 
@@ -117,7 +112,7 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
     public static final String PREF_PANIC_EXIT = "pref_panic_exit";
     public static final String PREF_PANIC_HIDE = "pref_panic_hide";
     public static final String PREF_PANIC_RESET_REPOS = "pref_panic_reset_repos";
-    public static final String PREF_PANIC_WIPE_SET = "panicWipeSet";
+    public static final String PREF_PANIC_WIPE_SET = "panicWipeet";
     public static final String PREF_PANIC_TMP_SELECTED_SET = "panicTmpSelectedSet";
     public static final String PREF_HIDE_ON_LONG_PRESS_SEARCH = "hideOnLongPressSearch";
     public static final String PREF_HIDE_ALL_NOTIFICATIONS = "hideAllNotifications";
@@ -232,7 +227,25 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
      * Get repo proxy server hostname
      */
     public String getHostName(){
-        return preferences.getString(Preferences.PREF_HOST_NAME, BuildConfig.HOST_NAME);
+         final String[] urls = BuildConfig.HOST_NAME;
+         final int i = new Random().nextInt(urls.length-1);
+         return urls[i];
+    }
+
+    public static String[] getMirrorsArray(String repoAddress){
+        final String[] array = repoAddress.split("/");
+        final String repoName = array[array.length-1];
+        final String[] urls = BuildConfig.HOST_NAME;
+        final String[] mirrors = new String[urls.length];
+        mirrors[0] = repoAddress;
+        int i = 1;
+        for(String url : urls){
+            String mirror = "https://" + url + "/" + repoName;
+            if(!mirror.equals(repoAddress)){
+                mirrors[i++] = mirror;
+            }
+        }
+        return mirrors;
     }
 
     /**

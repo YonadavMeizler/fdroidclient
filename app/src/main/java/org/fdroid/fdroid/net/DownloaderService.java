@@ -239,7 +239,12 @@ public class DownloaderService extends Service {
             if (downloader.isNotFound()) {
                 sendBroadcast(uri, Downloader.ACTION_INTERRUPTED, localFile, getString(R.string.download_404),
                         repoId, canonicalUrl);
-            } else {
+            }
+            else if(downloader.isTokenExpired()){
+                sendBroadcast(uri, Downloader.ACTION_INTERRUPTED, localFile, "Token expired",
+                              repoId, canonicalUrl);
+            }
+            else {
                 sendBroadcast(uri, Downloader.ACTION_COMPLETE, localFile, repoId, canonicalUrl);
             }
         } catch (InterruptedException e) {

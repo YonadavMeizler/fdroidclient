@@ -26,11 +26,12 @@ public class InitDialog{
     private final Button againButton;
     private final TextView messageTextView;
     private final AlertDialog alertDialog;
+    private final Context context;
 
     public InitDialog(final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
+        this.context = context;
         View view = View.inflate(context, R.layout.repo_load, null);
         cancelButton = view.findViewById(R.id.close_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -75,14 +76,13 @@ public class InitDialog{
     }
 
     public void forbidden(){
-        Context context = alertDialog.getContext();
         clearRepos(context);
+        alertDialog.dismiss();
         Authorisation.requestOtp(context);
     }
 
     public void setRepo(JSONObject jsonObject){
         alertDialog.dismiss();
-        Context context = alertDialog.getContext();
         String hostname = Preferences.get().getHostName();
         clearRepos(context);
         String TAG = "RepoInit";

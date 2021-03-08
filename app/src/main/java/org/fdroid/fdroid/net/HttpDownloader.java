@@ -166,11 +166,12 @@ public class HttpDownloader extends Downloader {
                 }
                 newFileAvailableOnServer = true;
                 break;
+            case HttpURLConnection.HTTP_FORBIDDEN:
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                notFound = true;
-                Authorisation.requestOtp(context);
+                tokenExpired = true;
                 return;
             case HttpURLConnection.HTTP_NOT_FOUND:
+                notFound = true;
                 return;
             default:
                 Utils.debugLog(TAG, "HEAD check of " + urlString + " returned " + statusCode + ": "

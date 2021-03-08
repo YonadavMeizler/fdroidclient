@@ -76,6 +76,7 @@ public class UpdateService extends JobIntentService {
     public static final int STATUS_ERROR_LOCAL = 3;
     public static final int STATUS_ERROR_LOCAL_SMALL = 4;
     public static final int STATUS_INFO = 5;
+    public static final int STATUS_ERROR_AUTHENTICATION = 6;
 
     private static final int JOB_ID = 0xfedcba;
 
@@ -159,7 +160,8 @@ public class UpdateService extends JobIntentService {
             } else {
                 Utils.debugLog(TAG, "Update scheduler alarm not set");
             }
-        } else {
+        }
+        else {
             Utils.debugLog(TAG, "Using android-21 JobScheduler for updates");
             JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
             ComponentName componentName = new ComponentName(context, UpdateJobService.class);
@@ -333,6 +335,14 @@ public class UpdateService extends JobIntentService {
                     notificationBuilder.setContentText(text)
                             .setCategory(NotificationCompat.CATEGORY_ERROR)
                             .setSmallIcon(android.R.drawable.ic_dialog_alert);
+                    setNotification();
+                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                    break;
+                case STATUS_ERROR_AUTHENTICATION:
+                    text = context.getString(R.string.jwt_expired);
+                    notificationBuilder.setContentText(text)
+                            .setCategory(NotificationCompat.CATEGORY_ERROR)
+                            .setSmallIcon(android.R.drawable.ic_lock_lock);
                     setNotification();
                     Toast.makeText(context, text, Toast.LENGTH_LONG).show();
                     break;

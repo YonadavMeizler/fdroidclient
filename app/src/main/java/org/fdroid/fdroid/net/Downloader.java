@@ -55,6 +55,7 @@ public abstract class Downloader {
     final String urlString;
     String cacheTag;
     boolean notFound;
+    boolean tokenExpired;
 
     private volatile int timeout = DEFAULT_TIMEOUT;
 
@@ -116,6 +117,13 @@ public abstract class Downloader {
      */
     public boolean isNotFound() {
         return notFound;
+    }
+
+    /**
+     * @return whether the requested file was forbidden or unauthenticated in the repo (e.g. Http 403, 401 )
+     */
+    public boolean isTokenExpired(){
+        return tokenExpired;
     }
 
     void downloadFromStream(boolean resumable) throws IOException, InterruptedException {

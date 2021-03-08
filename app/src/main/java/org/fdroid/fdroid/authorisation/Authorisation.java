@@ -20,17 +20,17 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
 public class Authorisation {
+
     private final static String urlPostfix = "/api/v1";
     private final static String urlPrefix = "auth.";
     private final static String TAG = "Authorisation";
     public final static String DNS_ERROR = "-1";
     public final static String IO_ERROR = "-2";
     public final static String JSON_ERROR = "-3";
-    public final static String FORBIDDEN = "403";
     public final static String NO_TOKEN = "-4";
+    public final static String FORBIDDEN = "403";
     public final static String INTERNAL_ERROR = "500";
-
-
+    private final static int TIMEOUT = 5000;
 
     public static void repoInit(final Context context){
         final InitDialog initDialog = new InitDialog(context);
@@ -56,12 +56,13 @@ public class Authorisation {
                     URL url = new URL(uri.toString());
                     HttpURLConnection httpURLConnection = certification((HttpURLConnection) url.openConnection(), context);
                     httpURLConnection.setRequestMethod("GET");
+                    httpURLConnection.setConnectTimeout(TIMEOUT);
                     httpURLConnection.setRequestProperty("Content-Type", "application/json");
                     httpURLConnection.setRequestProperty("Authorization", "Bearer " + token);
                     int responseCode = httpURLConnection.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                        StringBuffer stringBuffer = new StringBuffer();
+                        StringBuilder stringBuffer = new StringBuilder();
                         String line;
                         while ((line = bufferedReader.readLine()) != null) {
                             stringBuffer.append(line);
@@ -95,7 +96,7 @@ public class Authorisation {
                 if(jsonObject == null){
                     initDialog.error(JSON_ERROR);
                 }
-                else if(jsonObject.equals(new JSONObject())){
+                else if(jsonObject.toString().equals("{}")){
                     initDialog.networkError(IO_ERROR);
                 }
                 else if(jsonObject.has("err")){
@@ -145,6 +146,7 @@ public class Authorisation {
                     HttpURLConnection httpURLConnection = certification((HttpURLConnection) url.openConnection(), context);
                     httpURLConnection.setRequestMethod("POST");
                     httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setConnectTimeout(TIMEOUT);
                     httpURLConnection.setRequestProperty("Content-Type","application/json");
                     OutputStream outputStream = httpURLConnection.getOutputStream();
                     outputStream.write(jsonObject.toString().getBytes());
@@ -152,7 +154,7 @@ public class Authorisation {
                     int responseCode = httpURLConnection.getResponseCode();
                     if(responseCode == HttpURLConnection.HTTP_CREATED) {
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                        StringBuffer stringBuffer = new StringBuffer();
+                        StringBuilder stringBuffer = new StringBuilder();
                         String line;
                         while ((line = bufferedReader.readLine()) != null){
                             stringBuffer.append(line);
@@ -227,6 +229,7 @@ public class Authorisation {
                     HttpURLConnection httpURLConnection = certification((HttpURLConnection) url.openConnection(), context);
                     httpURLConnection.setRequestMethod("POST");
                     httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setConnectTimeout(TIMEOUT);
                     httpURLConnection.setRequestProperty("Content-Type","application/json");
                     OutputStream outputStream = httpURLConnection.getOutputStream();
                     outputStream.write(jsonStr.getBytes());

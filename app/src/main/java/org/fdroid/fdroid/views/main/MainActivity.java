@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private BottomNavigationBar bottomNavigation;
     private int selectedMenuId;
     private TextBadgeItem updatesBadge;
-
     private boolean hasAuthorised;
 
     @Override
@@ -272,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         super.onResume();
 
         FDroidApp.checkStartTor(this, Preferences.get());
+        Authorisation.check(this);
 
         if (getIntent().hasExtra(EXTRA_VIEW_UPDATES)) {
             getIntent().removeExtra(EXTRA_VIEW_UPDATES);
