@@ -411,6 +411,7 @@ public class DownloaderService extends Service {
         intentFilter.addAction(Downloader.ACTION_COMPLETE);
         intentFilter.addAction(Downloader.ACTION_INTERRUPTED);
         intentFilter.addAction(Downloader.ACTION_CONNECTION_FAILED);
+        intentFilter.addAction(Authorisation.RECEIVER_INTENT);
         intentFilter.addDataScheme(uri.getScheme());
         intentFilter.addDataAuthority(uri.getHost(), String.valueOf(uri.getPort()));
         intentFilter.addDataPath(uri.getPath(), PatternMatcher.PATTERN_LITERAL);

@@ -12,20 +12,26 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.fdroid.fdroid.AppUpdateStatusManager;
 import org.fdroid.fdroid.FDroidApp;
 import org.fdroid.fdroid.Hasher;
+import org.fdroid.fdroid.R;
 import org.fdroid.fdroid.Utils;
+import org.fdroid.fdroid.authorisation.Authorisation;
 import org.fdroid.fdroid.compat.PackageManagerCompat;
 import org.fdroid.fdroid.data.Apk;
 import org.fdroid.fdroid.data.App;
 import org.fdroid.fdroid.data.RepoProvider;
 import org.fdroid.fdroid.net.Downloader;
 import org.fdroid.fdroid.net.DownloaderService;
+import org.fdroid.fdroid.views.main.MainActivity;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -381,6 +387,20 @@ public class InstallManagerService extends Service {
                             localBroadcastManager.unregisterReceiver(this);
                         }
                         break;
+                    case  Authorisation.RECEIVER_INTENT:
+                    {
+                        appUpdateStatusManager.setDownloadError(canonicalUrl,
+                                                                intent.getStringExtra(Downloader.EXTRA_ERROR_MESSAGE));
+                        if(MainActivity.contextActivity != null){
+                            Authorisation.check(MainActivity.contextActivity);
+                        }
+                        else {
+                            context.startActivity(new Intent(context, MainActivity.class));
+                        }
+                        Toast.makeText(context, context.getString(R.string.jwt_expired), Toast.LENGTH_LONG).show();
+                        localBroadcastManager.unregisterReceiver(this);
+                        break;
+                    }
                     default:
                         throw new RuntimeException("intent action not handled!");
                 }

@@ -56,6 +56,7 @@ import org.fdroid.fdroid.data.Schema;
 import org.fdroid.fdroid.installer.InstallManagerService;
 import org.fdroid.fdroid.net.BluetoothDownloader;
 import org.fdroid.fdroid.net.ConnectivityMonitorService;
+import org.fdroid.fdroid.views.main.MainActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -348,8 +349,13 @@ public class UpdateService extends JobIntentService {
                             .setCategory(NotificationCompat.CATEGORY_ERROR)
                             .setSmallIcon(android.R.drawable.ic_lock_lock);
                     setNotification();
-                    Intent authInt = new Intent(Authorisation.RECEIVER_INTENT);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(authInt);
+                    if(Utils.isMainActivityRunning(context)){
+                        Intent authInt = new Intent(Authorisation.RECEIVER_INTENT);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(authInt);
+                    }
+                    else {
+                        context.startActivity(new Intent(context, MainActivity.class));
+                    }
                     Toast.makeText(context, text, Toast.LENGTH_LONG).show();
                     break;
                 case STATUS_ERROR_LOCAL:
