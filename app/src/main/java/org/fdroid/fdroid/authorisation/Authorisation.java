@@ -4,11 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+
 import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.net.SelfSignSslFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,6 +19,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -31,6 +35,9 @@ public class Authorisation {
     public final static String FORBIDDEN = "403";
     public final static String INTERNAL_ERROR = "500";
     private final static int TIMEOUT = 5000;
+    public final static String RECEIVER_INTENT = "AUTH_FAILED";
+    public final static String MESSAGE_ERROR = "Token error";
+
 
     public static void repoInit(final Context context){
         final InitDialog initDialog = new InitDialog(context);
@@ -203,7 +210,7 @@ public class Authorisation {
         final OtpDialog otpDialog = new OtpDialog(context);
         AsyncTask<Void, Void, Integer> otpRequestTask = new AsyncTask<Void, Void, Integer>() {
             /**
-             * Request OTP code from server.
+             * Request OTP code from server
              * Custom responses:
              *  {@value -1} - {@link IOException}
              *  {@value -2} - {@link UnknownHostException}

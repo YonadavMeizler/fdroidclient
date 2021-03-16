@@ -19,6 +19,7 @@
 
 package org.fdroid.fdroid;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -32,10 +33,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StatFs;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -51,15 +48,23 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+
 import org.fdroid.fdroid.compat.FileCompat;
 import org.fdroid.fdroid.data.App;
 import org.fdroid.fdroid.data.Repo;
 import org.fdroid.fdroid.data.SanitizedFile;
+import org.fdroid.fdroid.views.main.MainActivity;
 import org.xml.sax.XMLReader;
 
 import java.io.BufferedInputStream;
@@ -972,5 +977,25 @@ public final class Utils {
         public boolean isKeyboardVisible() {
             return visible;
         }
+    }
+
+    /**
+     * @return the True if {@link org.fdroid.fdroid.views.main.MainActivity) is opened.
+     */
+    public static boolean isMainActivityRunning(Context context){
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
+        try {
+            for (ActivityManager.RunningTaskInfo task : tasks) {
+                if (MainActivity.class.getCanonicalName().equalsIgnoreCase(task.baseActivity.getClassName()))
+                    return true;
+            }
+        }
+        catch(NullPointerException e){
+            Log.w(TAG,e.getMessage());
+        }
+        return false;
+
     }
 }

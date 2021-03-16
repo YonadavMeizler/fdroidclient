@@ -24,8 +24,9 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        versionCode 1010060
-        versionName getVersionName()
+        versionCode 1010070
+        //versionName getVersionName()
+        versionName "1.0.1"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         minSdkVersion 14
@@ -40,7 +41,7 @@ android {
         testInstrumentationRunnerArguments disableAnalytics: 'true'
         android.applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "${applicationId}_${versionName}.apk"
+                outputFileName = "${applicationId}.freystore_${versionName}.apk"
             }
         }
     }

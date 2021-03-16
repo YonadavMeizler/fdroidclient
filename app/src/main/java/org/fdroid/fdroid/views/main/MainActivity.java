@@ -33,14 +33,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -50,9 +42,19 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.ashokvarma.bottomnavigation.TextBadgeItem;
+
 import org.fdroid.fdroid.AppUpdateStatusManager;
 import org.fdroid.fdroid.AppUpdateStatusManager.AppUpdateStatus;
 import org.fdroid.fdroid.BuildConfig;
@@ -116,11 +118,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private TextBadgeItem updatesBadge;
     private boolean hasAuthorised;
 
+    public static Context contextActivity = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         ((FDroidApp) getApplication()).applyTheme(this);
         super.onCreate(savedInstanceState);
-
+        contextActivity = this;
         setContentView(R.layout.activity_main);
 
         adapter = new MainViewAdapter(this);
@@ -197,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         updateableAppsFilter.addAction(AppUpdateStatusManager.BROADCAST_APPSTATUS_CHANGED);
         updateableAppsFilter.addAction(AppUpdateStatusManager.BROADCAST_APPSTATUS_REMOVED);
         LocalBroadcastManager.getInstance(this).registerReceiver(onUpdateableAppsChanged, updateableAppsFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(authReceiver, new IntentFilter(Authorisation.RECEIVER_INTENT));
 
         if (savedInstanceState != null) {
             selectedMenuId = savedInstanceState.getInt(STATE_SELECTED_MENU_ID, (int) adapter.getItemId(0));
@@ -269,10 +274,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     @Override
     protected void onResume() {
         super.onResume();
-
         FDroidApp.checkStartTor(this, Preferences.get());
-        Authorisation.check(this);
-
+        contextActivity = this;
         if (getIntent().hasExtra(EXTRA_VIEW_UPDATES)) {
             getIntent().removeExtra(EXTRA_VIEW_UPDATES);
             pager.scrollToPosition(adapter.adapterPositionFromItemId(R.id.updates));
@@ -293,6 +296,22 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         // AppDetailsActivity and RepoDetailsActivity set different NFC actions, so reset here
         NfcHelper.setAndroidBeam(this, getApplication().getPackageName());
         checkForAddRepoIntent(getIntent());
+        LocalBroadcastManager.getInstance(this).registerReceiver(authReceiver, new IntentFilter(Authorisation.RECEIVER_INTENT));
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        contextActivity = null;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(authReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        contextActivity = null;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(authReceiver);
     }
 
     @Override
@@ -520,6 +539,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         }
     }
 
+    private final  BroadcastReceiver authReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(MainActivity.contextActivity == null){
+                Intent intentAct = new Intent(context,MainActivity.class);
+                context.startActivity(intentAct);
+            }
+            else {
+                Authorisation.check(MainActivity.contextActivity);
+            }
+        }
+    };
+
     /**
      * There are a bunch of reasons why we would get notified about app statuses.
      * The ones we are interested in are those which would result in the "items requiring user interaction"
@@ -534,7 +566,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             boolean updateBadge = false;
 
             AppUpdateStatusManager manager = AppUpdateStatusManager.getInstance(context);
-
             String reason = intent.getStringExtra(AppUpdateStatusManager.EXTRA_REASON_FOR_CHANGE);
             switch (intent.getAction()) {
                 // Apps which are added/removed from the list due to becoming ready to install or a repo being

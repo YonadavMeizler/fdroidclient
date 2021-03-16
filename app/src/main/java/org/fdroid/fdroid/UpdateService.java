@@ -37,10 +37,13 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import org.fdroid.fdroid.authorisation.Authorisation;
 import org.fdroid.fdroid.data.Apk;
 import org.fdroid.fdroid.data.ApkProvider;
 import org.fdroid.fdroid.data.App;
@@ -53,6 +56,7 @@ import org.fdroid.fdroid.data.Schema;
 import org.fdroid.fdroid.installer.InstallManagerService;
 import org.fdroid.fdroid.net.BluetoothDownloader;
 import org.fdroid.fdroid.net.ConnectivityMonitorService;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -304,7 +308,7 @@ public class UpdateService extends JobIntentService {
     private final BroadcastReceiver updateStatusReceiver = new BroadcastReceiver() {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, Intent intent) {
             String action = intent.getAction();
             if (TextUtils.isEmpty(action)) {
                 return;
@@ -344,6 +348,8 @@ public class UpdateService extends JobIntentService {
                             .setCategory(NotificationCompat.CATEGORY_ERROR)
                             .setSmallIcon(android.R.drawable.ic_lock_lock);
                     setNotification();
+                    Intent authInt = new Intent(Authorisation.RECEIVER_INTENT);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(authInt);
                     Toast.makeText(context, text, Toast.LENGTH_LONG).show();
                     break;
                 case STATUS_ERROR_LOCAL:

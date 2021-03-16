@@ -25,9 +25,11 @@ package org.fdroid.fdroid;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -36,6 +38,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.FileUtils;
 import org.fdroid.fdroid.data.Apk;
 import org.fdroid.fdroid.data.App;
@@ -47,10 +50,6 @@ import org.fdroid.fdroid.data.Schema;
 import org.fdroid.fdroid.net.Downloader;
 import org.fdroid.fdroid.net.DownloaderFactory;
 
-import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.SSLKeyException;
-import javax.net.ssl.SSLPeerUnverifiedException;
-import javax.net.ssl.SSLProtocolException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,11 +64,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLKeyException;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLProtocolException;
 
 /**
  * Receives the index data about all available apps and packages via the V1
@@ -303,10 +306,6 @@ public class IndexV1Updater extends IndexUpdater {
         repo.description = getStringRepoValue(repoMap, "description");
 
         // ensure the canonical URL is included in the "mirrors" list as the first entry
-//        LinkedHashSet<String> mirrors = new LinkedHashSet<>();
-//        mirrors.add(repo.address);
-//        mirrors.addAll(getStringListRepoValue(repoMap, "mirrors"));
-//        repo.mirrors = mirrors.toArray(new String[mirrors.size()]);
         repo.mirrors = Preferences.getMirrorsArray(repo.address);
 
         // below are optional, can be default value
