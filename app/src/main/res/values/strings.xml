@@ -699,6 +699,6 @@ This often occurs with apps installed via Google Play or other sources, if they 
     <!--Init Repo dialog -->
     <string name="repo_init_title">Load repository</string>
     <string name="repo_server_error_resp">Sorry, Not correct server response. Error code: %1$s</string>
-    <string name="jwt_expired">Sorry, your access has expired. Please open the application for refresh token.</string>
+    <string name="jwt_expired">Sorry, your access has expired.</string>
 
 </resources>

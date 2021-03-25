@@ -3,18 +3,21 @@ package org.fdroid.fdroid.authorisation;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.R;
 
 
 public class OtpDialog{
 
-    private AlertDialog alertDialog;
+    private final AlertDialog alertDialog;
     final String deviceId;
     final EditText otpEditText;
     final LinearLayout otpLayout;
@@ -32,6 +35,16 @@ public class OtpDialog{
         deviceId = Preferences.get().getDeviceID();
         //Controls initialization
         otpEditText = view.findViewById(R.id.otp_edit_text);
+
+        otpEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    otpValidation(context);
+                }
+                return false;
+            }
+        });
 
         otpLayout = view.findViewById(R.id.otp_confirm_layout);
 
@@ -59,11 +72,7 @@ public class OtpDialog{
         confirmOtpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO OTP confirm HTTP async request
-                String otp = otpEditText.getText().toString();
-                alertDialog.dismiss();
-                Authorisation.validationOtp(otp, context);
-
+                otpValidation(context);
             }
         });
 
@@ -110,6 +119,12 @@ public class OtpDialog{
 
     private void waitTextGone(){
         waitTextView.setVisibility(View.GONE);
+    }
+
+    private void otpValidation(Context context){
+        String otp = otpEditText.getText().toString();
+        alertDialog.dismiss();
+        Authorisation.validationOtp(otp, context);
     }
 
 }

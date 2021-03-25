@@ -36,6 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:gravity="center_horizontal"
+
             android:maxLength="6"/>
         <TextView
             android:id="@+id/otp_timer"
@@ -80,6 +82,7 @@
         android:id="@+id/otp_dialog_close_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="@string/otp_dialog_close_text" />
 
 
