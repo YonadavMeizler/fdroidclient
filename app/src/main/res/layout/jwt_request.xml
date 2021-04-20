@@ -4,9 +4,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
+    <ProgressBar
+        android:id="@+id/wait_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        />
     <TextView
-        android:id="@+id/jwt_dialog_deviceId_text"
+        android:id="@+id/message_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -28,7 +34,7 @@
 
 
     <Button
-        android:id="@+id/jwt_dialog_close_button"
+        android:id="@+id/close_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/otp_dialog_close_text" />

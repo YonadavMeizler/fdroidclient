@@ -1,13 +1,12 @@
 package org.fdroid.fdroid.authorisation;
 
-import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+
 import org.fdroid.fdroid.AddRepoIntentService;
 import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.R;
@@ -18,71 +17,41 @@ import org.fdroid.fdroid.data.Schema;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.List;
 
-public class InitDialog{
+public class InitDialog extends AuthorisationDialog{
 
-    private final Button cancelButton;
     private final Button againButton;
-    private final TextView messageTextView;
-    private final AlertDialog alertDialog;
-    private final Context context;
 
     public InitDialog(final Context context) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        this.context = context;
-        View view = View.inflate(context, R.layout.repo_load, null);
-        cancelButton = view.findViewById(R.id.close_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Activity)context).finish();
-            }
-        });
-
+        super(context, R.layout.repo_load);
         againButton = view.findViewById(R.id.again_button);
         againButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss();
+                dismiss();
                 Authorisation.repoInit(context);
             }
         });
-
-        messageTextView = view.findViewById(R.id.init_message);
-
-        builder.setTitle(context.getString(R.string.repo_init_title));
-        builder.setCancelable(false);
-        builder.setView(view);
-
-        alertDialog = builder.create();
+        setTitle(context.getString(R.string.repo_init_title));
+        createAlert();
     }
 
+    @Override
     public void error(String errCode){
-        cancelButton.setVisibility(View.VISIBLE);
+        super.error(errCode);
         againButton.setVisibility(View.VISIBLE);
-        messageTextView.setText(alertDialog.getContext().getString(R.string.repo_server_error_resp, errCode));
-    }
-
-    public void networkError(String errCode){
-        cancelButton.setVisibility(View.VISIBLE);
-        againButton.setVisibility(View.VISIBLE);
-        messageTextView.setText(alertDialog.getContext().getString(R.string.otp_dialog_service_error, errCode));
-    }
-
-    public void show(){
-        alertDialog.show();
     }
 
     public void forbidden(){
         clearRepos(context);
-        alertDialog.dismiss();
+        dismiss();
         Authorisation.requestOtp(context);
     }
 
     public void setRepo(JSONObject jsonObject){
-        alertDialog.dismiss();
+        dismiss();
         String hostname = Preferences.get().getHostName();
         clearRepos(context);
         String TAG = "RepoInit";

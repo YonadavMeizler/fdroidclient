@@ -61,11 +61,8 @@ android {
             applicationIdSuffix ".staging"
             versionNameSuffix "-staging"
             buildConfigField "String", "CA", '"ca_staging.crt"'
-            buildConfigField "String[]", "HOST_NAME",
-                   '{' +
-                    '"heimdallr-1.hfc.fe",' +
-                    '"heimdallr-2.hfc.fe",' +
-                    '"heimdallr-3.hfc.fe"' +
+            buildConfigField "String[]", "HOST_NAME", '{' +
+                    '"heimdallr.hfc.fe",'+
                     '}'
             resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
         }

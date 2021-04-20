@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <ProgressBar
+        android:id="@+id/wait_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        />
     <TextView
         android:id="@+id/otp_dialog_deviceId_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
         android:gravity="center"/>
-
     <TextView
         android:id="@+id/otp_dialog_wait"
         android:layout_width="match_parent"
@@ -37,8 +44,8 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:gravity="center_horizontal"
-
-            android:maxLength="6"/>
+            android:maxLength="6"
+            tools:ignore="LabelFor" />
         <TextView
             android:id="@+id/otp_timer"
             android:layout_width="match_parent"
@@ -59,7 +66,7 @@
         android:orientation="vertical"
         android:visibility="gone">
         <TextView
-            android:id="@+id/otp_dialog_alert_text"
+            android:id="@+id/message_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""/>
@@ -79,7 +86,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/otp_dialog_close_button"
+        android:id="@+id/close_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

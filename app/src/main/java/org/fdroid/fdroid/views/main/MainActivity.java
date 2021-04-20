@@ -57,7 +57,6 @@ import com.ashokvarma.bottomnavigation.TextBadgeItem;
 
 import org.fdroid.fdroid.AppUpdateStatusManager;
 import org.fdroid.fdroid.AppUpdateStatusManager.AppUpdateStatus;
-import org.fdroid.fdroid.BuildConfig;
 import org.fdroid.fdroid.FDroidApp;
 import org.fdroid.fdroid.NfcHelper;
 import org.fdroid.fdroid.Preferences;
@@ -127,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         contextActivity = this;
         setContentView(R.layout.activity_main);
 
-        adapter = new MainViewAdapter(this);
         hasAuthorised = false;
+        adapter = new MainViewAdapter(this);
         pager = (RecyclerView) findViewById(R.id.main_view_pager);
         pager.setHasFixedSize(true);
         pager.setLayoutManager(new NonScrollingHorizontalLayoutManager(this));
@@ -144,22 +143,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         updatesBadge = new TextBadgeItem().hide(false);
 
         bottomNavigation = (BottomNavigationBar) findViewById(R.id.bottom_navigation);
-//        bottomNavigation
-//                .addItem(new BottomNavigationItem(R.drawable.ic_latest, R.string.main_menu__latest_apps));
-        if (BuildConfig.FLAVOR.startsWith("full")) {
-            bottomNavigation
-                    .addItem(new BottomNavigationItem(R.drawable.ic_categories, R.string.main_menu__categories));
-            //             .addItem(new BottomNavigationItem(R.drawable.ic_nearby, R.string.main_menu__swap_nearby));
-
-            bottomNavigation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (bottomNavigation.getCurrentSelectedPosition() == 2) {
-                        NearbyViewBinder.updateUsbOtg(MainActivity.this);
-                    }
+        bottomNavigation
+                .addItem(new BottomNavigationItem(R.drawable.ic_categories, R.string.main_menu__categories));
+        bottomNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottomNavigation.getCurrentSelectedPosition() == 2) {
+                    NearbyViewBinder.updateUsbOtg(MainActivity.this);
                 }
-            });
-        }
+            }
+        });
+
         bottomNavigation.setTabSelectedListener(this)
                 .setBarBackgroundColor(getBottomNavigationBackgroundColorResId())
                 .setInActiveColor(R.color.bottom_nav_items)
@@ -226,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         }
 
     }
-
 
     @SuppressLint("HardwareIds")
     private void initialDeviceId(Context context){
@@ -540,14 +533,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     }
 
     private final  BroadcastReceiver authReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(MainActivity.contextActivity == null){
-                Intent intentAct = new Intent(context,MainActivity.class);
-                context.startActivity(intentAct);
-            }
-            else {
-                Authorisation.check(MainActivity.contextActivity);
+            if(!Preferences.get().isAuthRuined()) {
+                Preferences.get().setAuthRun(true);
+                if (MainActivity.contextActivity == null) {
+                    Intent intentAct = new Intent(context, MainActivity.class);
+                    context.startActivity(intentAct);
+                }
+                else {
+                    Authorisation.check(MainActivity.contextActivity);
+                }
             }
         }
     };
@@ -604,7 +601,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                         count++;
                     }
                 }
-
                 refreshUpdatesBadge(count);
             }
         }

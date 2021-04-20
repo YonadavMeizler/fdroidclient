@@ -28,11 +28,12 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.text.format.DateUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
-import android.text.format.DateUtils;
-import android.util.Log;
+
 import org.fdroid.fdroid.installer.PrivilegedInstaller;
 import org.fdroid.fdroid.net.ConnectivityMonitorService;
 
@@ -121,7 +122,7 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
     public static final String PREF_ACCESS_TOKEN = "access_token";
     public static final String PREF_DEVICE_ID = "device_id";
     public static final String PREF_HOST_NAME = "host_name";
-
+    public static final String PREF_AUTH_RUNNER = "auth_runner";
     public static final int OVER_NETWORK_NEVER = 0;
     public static final int OVER_NETWORK_ON_DEMAND = 1;
     public static final int OVER_NETWORK_ALWAYS = 2;
@@ -137,7 +138,6 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
     private static final boolean DEFAULT_SHOW_NFC_DURING_SWAP = true;
     private static final boolean DEFAULT_POST_PRIVILEGED_INSTALL = false;
     private static final boolean DEFAULT_PANIC_EXIT = true;
-
     private static final boolean IGNORED_B = false;
     private static final int IGNORED_I = -1;
 
@@ -228,8 +228,14 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
      */
     public String getHostName(){
          final String[] urls = BuildConfig.HOST_NAME;
-         final int i = new Random().nextInt(urls.length-1);
-         return urls[i];
+         if(urls.length > 1) {
+             final int i = new Random().nextInt(urls.length - 1);
+             return urls[i];
+         }
+         else if(urls.length == 1 ) return urls[0];
+         else {
+            return "";
+         }
     }
 
     public static String[] getMirrorsArray(String repoAddress){
@@ -555,6 +561,17 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
                 return DEFAULT_PROXY_PORT;
             }
         }
+    }
+
+    /**
+     * Is preferences pointed if @link: Authentication.check running now
+     */
+    public boolean isAuthRuined(){
+        return preferences.getBoolean(PREF_AUTH_RUNNER,false);
+    }
+
+    public void setAuthRun(boolean status){
+        preferences.edit().putBoolean(PREF_AUTH_RUNNER, status).apply();
     }
 
     public boolean preventScreenshots() {

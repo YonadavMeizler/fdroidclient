@@ -1,7 +1,5 @@
 package org.fdroid.fdroid.authorisation;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,27 +13,23 @@ import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.R;
 
 
-public class OtpDialog{
+public class OtpDialog extends AuthorisationDialog{
 
-    private final AlertDialog alertDialog;
     final String deviceId;
     final EditText otpEditText;
     final LinearLayout otpLayout;
     final LinearLayout problemLayout;
     final Button tryAgainButton;
-    final Button closeButton;
     final Button confirmOtpButton;
-    final TextView otpProblemTextView;
     final TextView deviceIdTextView;
     final TextView waitTextView;
 
     public OtpDialog(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final View view = View.inflate(context, R.layout.otp_request, null);
+        super(context, R.layout.otp_request);
         deviceId = Preferences.get().getDeviceID();
         //Controls initialization
         otpEditText = view.findViewById(R.id.otp_edit_text);
-
+        waitTextView = view.findViewById(R.id.otp_dialog_wait);
         otpEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -54,17 +48,8 @@ public class OtpDialog{
         tryAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss();
+                dismiss();
                 Authorisation.requestOtp(context);
-            }
-        });
-
-        closeButton = view.findViewById(R.id.otp_dialog_close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                ((Activity)context).finish();
             }
         });
 
@@ -75,36 +60,28 @@ public class OtpDialog{
                 otpValidation(context);
             }
         });
-
-        otpProblemTextView = view.findViewById(R.id.otp_dialog_alert_text);
-
         deviceIdTextView = view.findViewById(R.id.otp_dialog_deviceId_text);
         deviceIdTextView.setText(context.getString(R.string.otp_device_id_text, deviceId));
-
-        waitTextView = view.findViewById(R.id.otp_dialog_wait);
-
-        builder.setView(view);
-        builder.setTitle(context.getString(R.string.otp_dialog_title));
-        builder.setCancelable(false);
-
-        alertDialog = builder.create();
+        setTitle(context.getString(R.string.otp_dialog_title));
+        createAlert();
     }
 
     public void notFoundDialog(){
         waitTextGone();
-        otpProblemTextView.setText(alertDialog.getContext().getString(R.string.otp_dialog_service_not_found));
+        setMessage(context.getString(R.string.otp_dialog_service_not_found));
         problemLayout.setVisibility(View.VISIBLE);
     }
 
     public void forbiddenDialog(){
         waitTextGone();
-        otpProblemTextView.setText(alertDialog.getContext().getString(R.string.otp_dialog_service_forbidden));
+        setMessage(context.getString(R.string.otp_dialog_service_forbidden));
         problemLayout.setVisibility(View.VISIBLE);
     }
 
-    public void errorDialog(String responseCode){
+    @Override
+    public void error(String responseCode){
+        super.error(responseCode);
         waitTextGone();
-        otpProblemTextView.setText(alertDialog.getContext().getString(R.string.otp_dialog_service_error, responseCode));
         problemLayout.setVisibility(View.VISIBLE);
     }
 
@@ -113,17 +90,14 @@ public class OtpDialog{
         otpLayout.setVisibility(View.VISIBLE);
     }
 
-    public void show() {
-        alertDialog.show();
-    }
-
     private void waitTextGone(){
+        progressBar.setVisibility(View.GONE);
         waitTextView.setVisibility(View.GONE);
     }
 
     private void otpValidation(Context context){
         String otp = otpEditText.getText().toString();
-        alertDialog.dismiss();
+        dismiss();
         Authorisation.validationOtp(otp, context);
     }
 

@@ -6,6 +6,11 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
+        modules {
+            module("org.jetbrains.trove4j:trove4j") {
+                replacedBy("org.jetbrains.intellij.deps:trove4j")
+            }
+        }
     }
 }
 allprojects {

@@ -104,17 +104,15 @@ public class Authorisation {
                     initDialog.error(JSON_ERROR);
                 }
                 else if(jsonObject.toString().equals("{}")){
-                    initDialog.networkError(IO_ERROR);
+                    initDialog.error(IO_ERROR);
                 }
                 else if(jsonObject.has("err")){
                     try {
                         String err = jsonObject.getString("err");
-                        if(err.equals(FORBIDDEN)){
+                        if(err.equals(FORBIDDEN))
                             initDialog.forbidden();
-                        }
-                        else {
-                            initDialog.networkError(err);
-                        }
+                        else
+                            initDialog.error(err);
                     }
                     catch(JSONException e){
                         Log.e(TAG, e.getMessage());
@@ -123,6 +121,7 @@ public class Authorisation {
                 }
                 else {
                     initDialog.setRepo(jsonObject);
+                    Preferences.get().setAuthRun(false);
                 }
             }
         };
@@ -130,7 +129,7 @@ public class Authorisation {
     }
 
     public static void validationOtp(final String otp,final Context context){
-        final  JwtDialog jwtDialog = new JwtDialog(context);
+        final JwtDialog jwtDialog = new JwtDialog(context);
         AsyncTask<String, Void, String> jwtRequestTask = new AsyncTask<String, Void, String>() {
             @Override
             protected void onPreExecute() {
@@ -191,12 +190,6 @@ public class Authorisation {
                 if(s.length() > 3){
                     jwtDialog.setToken(s);
                 }
-                else if(s.equals(FORBIDDEN)){
-                    jwtDialog.forbidden();
-                }
-                else if(s.equals(INTERNAL_ERROR)){
-                    jwtDialog.serverError();
-                }
                 else {
                     jwtDialog.error(s);
                 }
@@ -212,8 +205,6 @@ public class Authorisation {
             /**
              * Request OTP code from server
              * Custom responses:
-             *  {@value -1} - {@link IOException}
-             *  {@value -2} - {@link UnknownHostException}
              */
 
             @Override
@@ -245,11 +236,11 @@ public class Authorisation {
                 }
                 catch(UnknownHostException e){
                     Log.e(TAG, e.getMessage());
-                    return -2;
+                    return Integer.parseInt(Authorisation.DNS_ERROR);
                 }
                 catch(IOException e){
                     Log.e(TAG, e.getMessage());
-                    return -1;
+                    return Integer.parseInt(Authorisation.IO_ERROR);
                 }
             }
 
@@ -266,7 +257,7 @@ public class Authorisation {
                     otpDialog.forbiddenDialog();
                 }
                 else {
-                    otpDialog.errorDialog(String.valueOf(reposeCode));
+                    otpDialog.error(String.valueOf(reposeCode));
                 }
 
 
