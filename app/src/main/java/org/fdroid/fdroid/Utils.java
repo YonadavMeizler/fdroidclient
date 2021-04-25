@@ -982,7 +982,7 @@ public final class Utils {
     /**
      * @return the True if {@link org.fdroid.fdroid.views.main.MainActivity) is opened.
      */
-    public static boolean isMainActivityRunning(Context context){
+    public static boolean isMainActivityRunning(@NonNull Context context){
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
 

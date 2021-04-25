@@ -71,7 +71,7 @@ public class InitDialog extends AuthorisationDialog{
                         Log.w(TAG, e.getMessage());
                     }
                 }
-                UpdateService.forceUpdateRepo(context);
+                UpdateService.updateNow(context);
             }
         }
         catch(JSONException e){

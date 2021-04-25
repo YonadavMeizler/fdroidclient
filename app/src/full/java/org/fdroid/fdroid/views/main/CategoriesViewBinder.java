@@ -3,17 +3,19 @@ package org.fdroid.fdroid.views.main;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.R;
@@ -21,10 +23,10 @@ import org.fdroid.fdroid.UpdateService;
 import org.fdroid.fdroid.Utils;
 import org.fdroid.fdroid.data.CategoryProvider;
 import org.fdroid.fdroid.data.Schema;
+import org.fdroid.fdroid.panic.HidingManager;
 import org.fdroid.fdroid.views.apps.AppListActivity;
 import org.fdroid.fdroid.views.categories.CategoryAdapter;
 import org.fdroid.fdroid.views.categories.CategoryController;
-import org.fdroid.fdroid.panic.HidingManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,8 +52,7 @@ class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
 
         View categoriesView = activity.getLayoutInflater().inflate(R.layout.main_tab_categories, parent, true);
 
-        categoryAdapter = new CategoryAdapter(activity, activity.getSupportLoaderManager());
-
+        categoryAdapter = new CategoryAdapter(activity, LoaderManager.getInstance(activity));
         emptyState = (TextView) categoriesView.findViewById(R.id.empty_state);
 
         categoriesList = (RecyclerView) categoriesView.findViewById(R.id.category_list);
@@ -89,7 +90,7 @@ class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
             }
         });
 
-        activity.getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+        LoaderManager.getInstance(activity).restartLoader(LOADER_ID, null, this);
     }
 
     @Override

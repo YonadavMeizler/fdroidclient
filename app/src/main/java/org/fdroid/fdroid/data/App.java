@@ -17,11 +17,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.fdroid.fdroid.FDroidApp;
 import org.fdroid.fdroid.Preferences;
@@ -704,7 +707,7 @@ public class App extends ValueObject implements Comparable<App>, Parcelable {
     public String getIconUrl(Context context) {
         Repo repo = RepoProvider.Helper.findById(context, repoId);
         if (TextUtils.isEmpty(iconUrl)) {
-            if (TextUtils.isEmpty(iconFromApk)) {
+            if (TextUtils.isEmpty(iconFromApk) || repo == null) {
                 return null;
             }
             if (iconFromApk.endsWith(".xml")) {
