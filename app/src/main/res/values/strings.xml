@@ -693,6 +693,7 @@ This often occurs with apps installed via Google Play or other sources, if they 
     <string name="otp_dialog_service_not_found">Sorry, OTP service not found. Please try again latte.</string>
     <string name="otp_dialog_service_forbidden">Sorry, Your device connection is not allowed.</string>
     <string name="otp_dialog_service_error">Sorry, OTP service is not available now. Response Code: %1$s</string>
+    <string name="otp_dialog_service_odin">Sorry, Your application not synchronized with OdinM. OdinM must be connected.</string>
     <!--Authentication dialog constants-->
     <string name="jwt_dialog_title">OTP validation</string>
     <string name="jwt_otp_not_valid">OTP not valid</string>

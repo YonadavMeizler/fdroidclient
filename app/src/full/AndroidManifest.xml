@@ -46,7 +46,6 @@
     <uses-permission android:name="android.permission.USB_PERMISSION"
                      android:maxSdkVersion="22"/> <!-- maybe unnecessary -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application>
@@ -109,6 +108,15 @@
             <meta-data
                     android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
                     android:resource="@xml/device_filter"/>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.DeviceIdReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.fdroid.fdroid.action.DEVICE_ID"/>
+            </intent-filter>
         </receiver>
 
         <activity

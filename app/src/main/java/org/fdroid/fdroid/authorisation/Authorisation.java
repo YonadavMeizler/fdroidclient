@@ -1,6 +1,8 @@
 package org.fdroid.fdroid.authorisation;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.net.SelfSignSslFactory;
+import org.fdroid.fdroid.receiver.DeviceIdReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -201,7 +204,8 @@ public class Authorisation {
     public static void requestOtp(final Context context){
 
         final OtpDialog otpDialog = new OtpDialog(context);
-        AsyncTask<Void, Void, Integer> otpRequestTask = new AsyncTask<Void, Void, Integer>() {
+        final DeviceIdReceiver deviceIdReceiver = new DeviceIdReceiver();
+        final AsyncTask<Void, Void, Integer> otpRequestTask = new AsyncTask<Void, Void, Integer>() {
             /**
              * Request OTP code from server
              * Custom responses:
@@ -210,7 +214,6 @@ public class Authorisation {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                otpDialog.show();
             }
 
             @Override
@@ -263,7 +266,61 @@ public class Authorisation {
 
             }
         };
-        otpRequestTask.execute();
+        final AsyncTask<Void, Void, Integer> deviceIdTask = new AsyncTask<Void, Void, Integer>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Preferences.get().setDeviceID("");
+            }
+
+            @Override
+            protected Integer doInBackground(Void... voids) {
+                /**
+                Returned codes:
+                    0: OK
+                    1: Interrupted
+                    2: Timeout
+                 */
+                Intent intent = new Intent(DeviceIdReceiver.ODIN_ACTION);
+                intent.putExtra(DeviceIdReceiver.EXTRA_REQUEST, DeviceIdReceiver.DEVICE_ID_MESSAGE);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                context.getApplicationContext().sendBroadcast(intent);
+                //Time duration for broadcast response
+                final int maxTime = 20000;
+                int count = 0;
+                final int timeInterval = 100;
+                while (Preferences.get().getDeviceID().equals("") && count < maxTime){
+                    try {
+                        count += timeInterval;
+                        Thread.sleep(timeInterval);
+                    }
+                    catch(InterruptedException e){
+                        return 1;
+                    }
+                }
+                if(count >= timeInterval)
+                {
+                    return 2;
+                }
+                return 0;
+            }
+
+            @Override
+            protected void onPostExecute(Integer integer) {
+                super.onPostExecute(integer);
+                final String deviceId = Preferences.get().getDeviceID();
+                if(!deviceId.equals(""))
+                    otpRequestTask.execute();
+                else{
+                    otpDialog.noDeviceIdDialog();
+                }
+                otpDialog.setDeviceIdTextView(deviceId);
+                context.getApplicationContext().unregisterReceiver(deviceIdReceiver);
+            }
+        };
+        context.getApplicationContext().registerReceiver(deviceIdReceiver, new IntentFilter(DeviceIdReceiver.INTENT_FILTER));
+        otpDialog.show();
+        deviceIdTask.execute();
     }
 
     /**

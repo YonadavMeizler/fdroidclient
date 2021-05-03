@@ -9,13 +9,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import org.fdroid.fdroid.Preferences;
 import org.fdroid.fdroid.R;
 
 
 public class OtpDialog extends AuthorisationDialog{
 
-    final String deviceId;
     final EditText otpEditText;
     final LinearLayout otpLayout;
     final LinearLayout problemLayout;
@@ -26,7 +27,6 @@ public class OtpDialog extends AuthorisationDialog{
 
     public OtpDialog(final Context context) {
         super(context, R.layout.otp_request);
-        deviceId = Preferences.get().getDeviceID();
         //Controls initialization
         otpEditText = view.findViewById(R.id.otp_edit_text);
         waitTextView = view.findViewById(R.id.otp_dialog_wait);
@@ -61,7 +61,7 @@ public class OtpDialog extends AuthorisationDialog{
             }
         });
         deviceIdTextView = view.findViewById(R.id.otp_dialog_deviceId_text);
-        deviceIdTextView.setText(context.getString(R.string.otp_device_id_text, deviceId));
+        deviceIdTextView.setText(context.getString(R.string.otp_device_id_text, Preferences.get().getDeviceID()));
         setTitle(context.getString(R.string.otp_dialog_title));
         createAlert();
     }
@@ -75,6 +75,13 @@ public class OtpDialog extends AuthorisationDialog{
     public void forbiddenDialog(){
         waitTextGone();
         setMessage(context.getString(R.string.otp_dialog_service_forbidden));
+        problemLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void noDeviceIdDialog(){
+        waitTextGone();
+        setMessage(context.getString(R.string.otp_dialog_service_odin));
+        deviceIdTextView.setText(context.getString(R.string.otp_device_id_text, "None"));
         problemLayout.setVisibility(View.VISIBLE);
     }
 
@@ -99,6 +106,10 @@ public class OtpDialog extends AuthorisationDialog{
         String otp = otpEditText.getText().toString();
         dismiss();
         Authorisation.validationOtp(otp, context);
+    }
+
+    public void setDeviceIdTextView(@NonNull final String deviceId){
+        deviceIdTextView.setText(context.getString(R.string.otp_device_id_text, deviceId));
     }
 
 }
