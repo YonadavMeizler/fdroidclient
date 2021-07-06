@@ -41,8 +41,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
 
-
-
         <provider
             android:name=".data.AppProvider"
             android:authorities="${applicationId}.data.AppProvider"
@@ -109,10 +107,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".views.main.MainActivity" />
         </activity>
+
         <activity
             android:name=".privileged.views.UninstallDialogActivity"
             android:excludeFromRecents="true"
             android:theme="@style/AppThemeTransparent" />
+
         <activity
             android:name=".views.ManageReposActivity"
             android:configChanges="layoutDirection|locale"
@@ -123,10 +123,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".views.main.MainActivity" />
         </activity>
+
         <activity
             android:name=".NfcNotEnabledActivity"
             android:configChanges="layoutDirection|locale"
             android:noHistory="true" />
+
         <activity
             android:name=".views.RepoDetailsActivity"
             android:configChanges="layoutDirection|locale"
@@ -137,6 +139,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".views.ManageReposActivity" />
         </activity>
+
         <activity
             android:name=".views.AppDetailsActivity"
             android:configChanges="layoutDirection|locale"
@@ -147,6 +150,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".views.main.MainActivity" />
         </activity>
+
         <activity
             android:name=".acra.CrashReportActivity"
             android:excludeFromRecents="true"
@@ -154,13 +158,17 @@
             android:launchMode="singleInstance"
             android:process=":error_report"
             android:theme="@style/AppThemeDark" />
+
         <activity android:name=".views.ScreenShotsActivity" /> <!-- Note: AppThemeTransparent, this activity shows dialogs only -->
+
         <activity
             android:name=".data.ObbUrlActivity"
             android:theme="@android:style/Theme.NoDisplay" /> <!-- Note: AppThemeTransparent, this activity shows dialogs only -->
+
         <activity
             android:name=".installer.DefaultInstallerActivity"
             android:theme="@style/AppThemeTransparent" /> <!-- Note: AppThemeTransparent, this activity shows dialogs only -->
+
         <activity
             android:name=".installer.ErrorDialogActivity"
             android:theme="@style/AppThemeTransparent" />
@@ -172,6 +180,7 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".receiver.PackageManagerReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
@@ -181,15 +190,27 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".NotificationBroadcastReceiver"
             android:exported="false">
 
             <!-- Doesn't require an intent-filter because it is explicitly invoked via Intent.setClass() -->
         </receiver>
+
         <receiver android:name=".receiver.DeviceStorageReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.OtpReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="Instantiatable">
+            <intent-filter android:priority="999">
+                <action android:name="org.fdroid.fdroid.action.OTP"/>
             </intent-filter>
         </receiver>
 
@@ -197,6 +218,7 @@
             android:name=".UpdateService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <service
             android:name=".UpdateJobService"
             android:exported="false"
@@ -240,6 +262,7 @@
         <service
             android:name=".AddRepoIntentService"
             android:exported="false" /> <!-- Warning: Please add all new services to HidingManager -->
+
         <activity
             android:name=".views.main.MainActivity"
             android:launchMode="singleTop"
@@ -260,6 +283,7 @@
 
                 <data android:scheme="fdroid.app" />
             </intent-filter>
+
             <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -277,6 +301,7 @@
                 <data android:pathPattern="/.*/packages/.*" />
                 <data android:pathPattern="/.*/packages/.*/" />
             </intent-filter>
+
             <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -294,6 +319,7 @@
                 <data android:pathPattern="/.*/packages/.*" />
                 <data android:pathPattern="/.*/packages/.*/" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -304,6 +330,7 @@
                     android:host="details"
                     android:scheme="market" />
             </intent-filter>
+
             <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 

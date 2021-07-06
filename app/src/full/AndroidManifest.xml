@@ -29,7 +29,6 @@
     <uses-feature android:name="android.hardware.nfc" android:required="false"/>
     <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
     <uses-feature android:name="android.hardware.usb.host" android:required="false"/>
-
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -90,6 +89,8 @@
                 android:name=".nearby.SDCardScannerService"
                 android:exported="false"/>
 
+
+
         <receiver
                 android:name=".nearby.UsbDeviceAttachedReceiver">
             <intent-filter>
@@ -134,6 +135,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
         <activity
                 android:name=".panic.SelectInstalledAppsActivity"
                 android:parentActivityName=".panic.PanicPreferencesActivity"/>
@@ -150,9 +152,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
         <activity
                 android:name=".panic.ExitActivity"
                 android:theme="@android:style/Theme.NoDisplay"/>
+
         <activity
                 android:name=".panic.CalculatorActivity"
                 android:enabled="false"
