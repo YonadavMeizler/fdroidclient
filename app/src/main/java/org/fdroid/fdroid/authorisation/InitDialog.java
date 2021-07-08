@@ -71,7 +71,10 @@ public class InitDialog extends AuthorisationDialog{
                         Log.w(TAG, e.getMessage());
                     }
                 }
-                UpdateService.updateNow(context);
+                if(RepoProvider.Helper.all(context).size() > 0){
+                    UpdateService.updateNow(context);
+                }
+
             }
         }
         catch(JSONException e){
@@ -86,8 +89,5 @@ public class InitDialog extends AuthorisationDialog{
             RepoProvider.Helper.remove(context, repo.getId());
         }
     }
-
-
-
 
 }

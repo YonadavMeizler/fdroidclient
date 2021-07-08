@@ -90,8 +90,8 @@ import javax.net.ssl.SSLProtocolException;
  * variables.
  */
 public class IndexV1Updater extends IndexUpdater {
-    public static final String TAG = "IndexV1Updater";
 
+    public static final String TAG = "IndexV1Updater";
     public static final String SIGNED_FILE_NAME = "index-v1.jar";
     public static final String DATA_FILE_NAME = "index-v1.json";
 

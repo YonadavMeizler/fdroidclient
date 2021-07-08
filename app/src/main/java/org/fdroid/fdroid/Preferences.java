@@ -122,6 +122,7 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
     public static final String PREF_ACCESS_TOKEN = "access_token";
     public static final String PREF_DEVICE_ID = "device_id";
     public static final String PREF_HOST_NAME = "host_name";
+    public static final String PREF_IS_CAT_PRESENT = "cat_present";
     public static final String PREF_AUTH_RUNNER = "auth_runner";
     public static final int OVER_NETWORK_NEVER = 0;
     public static final int OVER_NETWORK_ON_DEMAND = 1;
@@ -192,6 +193,14 @@ public final class Preferences implements SharedPreferences.OnSharedPreferenceCh
 
     public boolean promptToSendCrashReports() {
         return preferences.getBoolean(PREF_PROMPT_TO_SEND_CRASH_REPORTS, IGNORED_B);
+    }
+
+    public boolean isCategoryPresent(){
+        return  preferences.getBoolean(PREF_IS_CAT_PRESENT, false);
+    }
+
+    public void setCategoriesPresent(boolean flag){
+        preferences.edit().putBoolean(PREF_IS_CAT_PRESENT, flag).apply();
     }
 
     public boolean isForceOldIndexEnabled() {

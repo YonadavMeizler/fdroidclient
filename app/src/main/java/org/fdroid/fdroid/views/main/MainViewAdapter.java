@@ -21,14 +21,16 @@
 
 package org.fdroid.fdroid.views.main;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.fdroid.fdroid.R;
 
 /**
@@ -47,7 +49,6 @@ import org.fdroid.fdroid.R;
 class MainViewAdapter extends RecyclerView.Adapter<MainViewController> {
 
     private final SparseIntArray positionToId;
-
     private final AppCompatActivity activity;
 
     MainViewAdapter(AppCompatActivity activity) {

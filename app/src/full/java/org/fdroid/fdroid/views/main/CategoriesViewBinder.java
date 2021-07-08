@@ -22,6 +22,7 @@ import org.fdroid.fdroid.R;
 import org.fdroid.fdroid.UpdateService;
 import org.fdroid.fdroid.Utils;
 import org.fdroid.fdroid.data.CategoryProvider;
+import org.fdroid.fdroid.data.RepoProvider;
 import org.fdroid.fdroid.data.Schema;
 import org.fdroid.fdroid.panic.HidingManager;
 import org.fdroid.fdroid.views.apps.AppListActivity;
@@ -41,16 +42,16 @@ import java.util.List;
 class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOADER_ID = 429820532;
-
     private final CategoryAdapter categoryAdapter;
     private final AppCompatActivity activity;
     private final TextView emptyState;
     private final RecyclerView categoriesList;
 
+
     CategoriesViewBinder(final AppCompatActivity activity, FrameLayout parent) {
         this.activity = activity;
 
-        View categoriesView = activity.getLayoutInflater().inflate(R.layout.main_tab_categories, parent, true);
+        final View categoriesView = activity.getLayoutInflater().inflate(R.layout.main_tab_categories, parent, true);
 
         categoryAdapter = new CategoryAdapter(activity, LoaderManager.getInstance(activity));
         emptyState = (TextView) categoriesView.findViewById(R.id.empty_state);
@@ -67,7 +68,14 @@ class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
             @Override
             public void onRefresh() {
                 swipeToRefresh.setRefreshing(false);
-                UpdateService.updateNow(activity);
+                if(!UpdateService.isUpdating()) {
+                    if(!Preferences.get().isCategoryPresent() && RepoProvider.Helper.all(activity).size() > 0){
+                        UpdateService.forceUpdateRepo(activity);
+                    }
+                    else {
+                        UpdateService.updateNow(activity);
+                    }
+                }
             }
         });
 
@@ -92,6 +100,7 @@ class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
 
         LoaderManager.getInstance(activity).restartLoader(LOADER_ID, null, this);
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -123,14 +132,13 @@ class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
         if (loader.getId() != LOADER_ID || cursor == null) {
             return;
         }
-
         List<String> categoryNames = new ArrayList<>(cursor.getCount());
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             categoryNames.add(cursor.getString(cursor.getColumnIndex(Schema.CategoryTable.Cols.NAME)));
             cursor.moveToNext();
         }
-
+        Utils.debugLog("TEST", "Number of categories:" + categoryNames.size());
         Collections.sort(categoryNames, new Comparator<String>() {
             @Override
             public int compare(String categoryOne, String categoryTwo) {
@@ -145,9 +153,11 @@ class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
         if (categoryAdapter.getItemCount() == 0) {
             emptyState.setVisibility(View.VISIBLE);
             categoriesList.setVisibility(View.GONE);
+            Preferences.get().setCategoriesPresent(false);
         } else {
             emptyState.setVisibility(View.GONE);
             categoriesList.setVisibility(View.VISIBLE);
+            Preferences.get().setCategoriesPresent(true);
         }
     }
 
@@ -156,7 +166,6 @@ class CategoriesViewBinder implements LoaderManager.LoaderCallbacks<Cursor> {
         if (loader.getId() != LOADER_ID) {
             return;
         }
-
         categoryAdapter.setCategories(Collections.<String>emptyList());
     }
 

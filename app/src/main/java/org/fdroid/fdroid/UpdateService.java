@@ -644,4 +644,15 @@ public class UpdateService extends JobIntentService {
             sendStatus(context, STATUS_INFO, message);
         }
     }
+
+    public static void initialRepoUpdateIfRequired(Context context){
+
+        if(!UpdateService.isUpdating()){
+            if (Preferences.get().isIndexNeverUpdated()){
+                Utils.debugLog(TAG, "We haven't done an update yet. Forcing repo update.");
+                UpdateService.updateNow(context);
+            }
+        }
+
+    }
 }

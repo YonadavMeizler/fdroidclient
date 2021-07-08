@@ -45,6 +45,7 @@ public class Authorisation {
     public static void repoInit(final Context context){
         final InitDialog initDialog = new InitDialog(context);
         final AsyncTask<Void, Void, JSONObject> repoInitTask = new AsyncTask<Void, Void, JSONObject>() {
+
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -266,6 +267,7 @@ public class Authorisation {
 
             }
         };
+
         final AsyncTask<Void, Void, Integer> deviceIdTask = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected void onPreExecute() {

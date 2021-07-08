@@ -14,7 +14,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        versionCode 1010075
+        versionCode 1010076
         versionName "1.0.6"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -67,16 +67,20 @@ android {
         }
 
         debug {
-            applicationIdSuffix ".debug"
+//            applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
-            buildConfigField "String", "CA", '"ca_debug.crt"'
+//            buildConfigField "String", "CA", '"ca_debug.crt"'
+            buildConfigField "String", "CA", '"ca_rel.crt"'
             buildConfigField "String[]", "HOST_NAME", '{' +
-                    '"heimwdallr-1.me",' +
-                    '"heimdallr-2.me",' +
-                    '"heimdallr-3.me"' +
+//                    '"heimwdallr-1.me",' +
+//                    '"heimdallr-2.me",' +
+//                    '"heimdallr-3.me"' +
+                    '"heimdallr-1.clo.msi",' +
+                    '"heimdallr-2.clo.msi",' +
+                    '"heimdallr-3.clo.msi"' +
                     '}'
             println 'buildTypes.debug defaultConfig.versionCode ' + defaultConfig.versionCode
-            resValue "string", "applicationId", fullApplicationId + applicationIdSuffix
+            resValue "string", "applicationId", fullApplicationId // + applicationIdSuffix
         }
     }
 
@@ -156,16 +160,16 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'info.guardianproject.netcipher:netcipher:2.0.0-beta1'
@@ -190,12 +194,12 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.3.3'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.bouncycastle:bcprov-jdk15on:1.65'
-    androidTestImplementation 'androidx.test:core:1.2.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test:monitor:1.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:core:1.4.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test:monitor:1.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 

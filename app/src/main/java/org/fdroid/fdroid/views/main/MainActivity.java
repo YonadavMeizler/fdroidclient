@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private BottomNavigationBar bottomNavigation;
     private int selectedMenuId;
     private TextBadgeItem updatesBadge;
-    private boolean hasAuthorised;
-
     public static Context contextActivity = null;
 
     @Override
@@ -120,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         contextActivity = this;
         setContentView(R.layout.activity_main);
 
-        hasAuthorised = false;
         adapter = new MainViewAdapter(this);
         pager = (RecyclerView) findViewById(R.id.main_view_pager);
         pager.setHasFixedSize(true);
@@ -195,12 +192,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             selectedMenuId = (int) adapter.getItemId(0);
         }
         setSelectedMenuInNav();
-        initialRepoUpdateIfRequired();
-        Intent intent = getIntent();
-        handleSearchOrAppViewIntent(intent);
-        if(!hasAuthorised) {
+        if(!Preferences.get().isAuthRuined() && Preferences.get().getAccessToken().trim().equals("")){
             Authorisation.check(this);
         }
+        else {
+            UpdateService.initialRepoUpdateIfRequired(this);
+        }
+        Intent intent = getIntent();
+        handleSearchOrAppViewIntent(intent);
+
     }
 
     @Override
@@ -211,13 +211,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     private void setSelectedMenuInNav() {
         bottomNavigation.selectTab(adapter.adapterPositionFromItemId(selectedMenuId));
-    }
-
-    private void initialRepoUpdateIfRequired() {
-        if (Preferences.get().isIndexNeverUpdated() && !UpdateService.isUpdating()) {
-            Utils.debugLog(TAG, "We haven't done an update yet. Forcing repo update.");
-            UpdateService.updateNow(this);
-        }
     }
 
     @Override
@@ -260,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     protected void onPause() {
         super.onPause();
         contextActivity = null;
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(authReceiver);
     }
 
     @Override

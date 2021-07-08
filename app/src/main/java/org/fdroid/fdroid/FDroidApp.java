@@ -40,14 +40,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
-import androidx.annotation.Nullable;
-import androidx.collection.LongSparseArray;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.collection.LongSparseArray;
+
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
@@ -55,8 +57,7 @@ import com.nostra13.universalimageloader.core.DefaultConfigurationFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.process.BitmapProcessor;
-import info.guardianproject.netcipher.NetCipher;
-import info.guardianproject.netcipher.proxy.OrbotHelper;
+
 import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
@@ -71,19 +72,23 @@ import org.fdroid.fdroid.data.Repo;
 import org.fdroid.fdroid.installer.ApkFileProvider;
 import org.fdroid.fdroid.installer.InstallHistoryService;
 import org.fdroid.fdroid.nearby.SDCardScannerService;
+import org.fdroid.fdroid.nearby.WifiStateChangeService;
 import org.fdroid.fdroid.net.ConnectivityMonitorService;
 import org.fdroid.fdroid.net.Downloader;
 import org.fdroid.fdroid.net.HttpDownloader;
 import org.fdroid.fdroid.net.ImageLoaderForUIL;
-import org.fdroid.fdroid.nearby.WifiStateChangeService;
 import org.fdroid.fdroid.panic.HidingManager;
 
-import javax.microedition.khronos.opengles.GL10;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.Security;
 import java.util.List;
 import java.util.UUID;
+
+import javax.microedition.khronos.opengles.GL10;
+
+import info.guardianproject.netcipher.NetCipher;
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 @ReportsCrashes(mailTo = BuildConfig.ACRA_REPORT_EMAIL,
         mode = ReportingInteractionMode.DIALOG,
@@ -334,9 +339,9 @@ public class FDroidApp extends Application {
         } else {
             currentLocale = newConfig.getLocales().toString();
         }
-        if (!TextUtils.equals(lastLocale, currentLocale)) {
-            UpdateService.forceUpdateRepo(this);
-        }
+//        if (!TextUtils.equals(lastLocale, currentLocale)) {
+//            UpdateService.forceUpdateRepo(this);
+//        }
         atStartTime.edit().putString(lastLocaleKey, currentLocale).apply();
     }
 
@@ -468,15 +473,10 @@ public class FDroidApp extends Application {
                 .threadPoolSize(getThreadPoolSize())
                 .build();
         ImageLoader.getInstance().init(config);
-
-        if (preferences.isIndexNeverUpdated()) {
-            preferences.setDefaultForDataOnlyConnection(this);
-            // force this check to ensure it starts fetching the index on initial runs
-            networkState = ConnectivityMonitorService.getNetworkState(this);
-        }
         ConnectivityMonitorService.registerAndStart(this);
-        UpdateService.schedule(getApplicationContext());
-
+        if(!Preferences.get().getAccessToken().trim().equals("")){
+            UpdateService.schedule(getApplicationContext());
+        }
         FDroidApp.initWifiSettings();
         WifiStateChangeService.start(this, null);
         // if the HTTPS pref changes, then update all affected things
